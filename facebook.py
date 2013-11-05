@@ -53,7 +53,7 @@ def text_cond(possible):
 for face in faces['Minority_Face']:
 	print '%s, %s' % (face, face_count)
 	face_count += 1
-	search = '/posts?since=%s' % CUTOFF_UNIX
+	search = '/posts'
 	statuses = graph.get(face + search)
 	if len(statuses['data']) > 1:
 		for status in statuses['data']:

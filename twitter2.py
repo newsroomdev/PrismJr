@@ -4,6 +4,7 @@ from csv import DictReader, DictWriter
 from datetime import datetime
 from os import environ
 from sys import argv
+from time import sleep
 
 import requests
 from requests_oauthlib import OAuth1
@@ -25,11 +26,11 @@ OAUTH_TOKEN_SECRET = "JqQBjr26dIWH4ZTKN6t32tfHOAo57utsYbiKx05rs"
 # API urls & params 
 BASE_URL = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name="
 COUNT = "&count=200"
-CUTOFF = datetime(2013, 6, 21)
+CUTOFF = datetime(2012, 6, 21)
 WAIT = 60 * 15
 
 # get variables from the command line
-(argument, input, output) = argv[1:]
+# (argument, input, output) = argv[1:]
 
 def setup_oauth():
     """Authorize your app via identifier."""
@@ -87,45 +88,29 @@ def input_users(filename):
 
     return tweeps
 
-def parse_tweets(statuses):
+def parse_tweets(lists):
     """
     Takes a list of dictionaries, get the good bits
     Returns a dictionary
     """
     timeline = []
-    for status in statuses:
-        format = "%a %b %d %H:%M:%S +0000 %Y"
-        stamp = datetime.strptime(status['created_at'], format)
-        if stamp >= CUTOFF:
-            # write the data to a new dictionary
-            timeline.append({
-                # "id": "%s" % status['id_str'],
-                "screen_name": "%s" % status['user']['name'],
-                "text": "%s" % status['text'],
-                "retweet_count": "%s" % status['retweet_count'],
-                "favorite_count": "%s" % status['favorite_count'],
-                "created_at": "%s" % status['created_at'],
-                "week": "%s" % stamp.strftime("%U")
-            })
+    for statuses in lists:
+        for status in statuses:
+            format = "%a %b %d %H:%M:%S +0000 %Y"
+            output_format = "%m/%d/%Y %H:%M:%S"
+            stamp = datetime.strptime(status['created_at'], format)
+            if stamp >= CUTOFF:
+                # write the data to a new dictionary
+                timeline.append({
+                    # "id": "%s" % status['id_str'],
+                    "screen_name": "%s" % status['user']['screen_name'],
+                    "text": "%s" % status['text'],
+                    "retweet_count": "%s" % status['retweet_count'],
+                    "favorite_count": "%s" % status['favorite_count'],
+                    "created_at": "%s" % stamp.strftime(output_format),
+                    "week": "%s" % stamp.strftime("%U")
+                })
     return timeline
-
-def output_csv(timeline, user=None):
-    """
-    Takes a dictionary and writes it to a CSV
-    """
-    row0 = timeline[0].keys()
-    if user != None:
-        write_name = user + '.csv'
-    else:
-        write_name = 'twitter.csv'
-    with open(write_name, 'wb') as writef:
-        # Write the header row because of reasons.
-        write_csv = DictWriter(writef, fieldnames=row0)
-        write_csv.writeheader()
-        # write the dictionary to a CSV, and encode strings at UTF8
-        for d in timeline:
-            write_csv.writerow({k:v.encode('utf8') for k,v in d.items()})
-    return 'PRISM Jr. is done. Please see %s' % write_name
 
 def next_timeline(statuses, tweep):
     """
@@ -147,6 +132,7 @@ def make_requests(users):
     storage = []
     for user in users:
         print user
+        sleep(0.25)
         r = requests.get(url=BASE_URL+user+COUNT, auth=oauth)
         statuses = r.json()
         next = next_timeline(statuses, user)
@@ -159,6 +145,24 @@ def make_requests(users):
         print 'appended %s to storage' % len(statuses)
     return storage
 
+def output_csv(timeline, user=None):
+    """
+    Takes a dictionary and writes it to a CSV
+    """
+    row0 = timeline[0].keys()
+    if user != None:
+        write_name = user + '.csv'
+    else:
+        write_name = 'twitter.csv'
+    with open(write_name, 'wb') as writef:
+        # Write the header row because of reasons.
+        write_csv = DictWriter(writef, fieldnames=row0)
+        write_csv.writeheader()
+        # write the dictionary to a CSV, and encode strings at UTF8
+        for d in timeline:
+            write_csv.writerow({k:v.encode('utf8') for k,v in d.items()})
+    return 'PRISM Jr. is done. Please see %s' % write_name
+
 if __name__ == "__main__":
     if not OAUTH_TOKEN:
         token, secret = setup_oauth()
@@ -169,6 +173,3 @@ if __name__ == "__main__":
         print
     else:
         oauth = get_oauth()
-        r = requests.get(url="https://api.twitter.com/1.1/statuses/mentions_timeline.json", 
-            auth=oauth)
-        print r.json()
