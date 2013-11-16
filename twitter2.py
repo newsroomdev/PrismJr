@@ -6,9 +6,15 @@ from os import environ
 from sys import argv
 from time import sleep
 
+from pymongo import MongoClient
 import requests
 from requests_oauthlib import OAuth1
 from urlparse import parse_qs
+
+# Mongo setup
+client = MongoClient()
+db = client.apps
+prismJr = db.panopticon
 
 # Twitter specific auth urls
 REQUEST_TOKEN_URL = "https://api.twitter.com/oauth/request_token"
@@ -173,3 +179,4 @@ if __name__ == "__main__":
         print
     else:
         oauth = get_oauth()
+        tweeps = twitter2.input_users('tweeps.csv')

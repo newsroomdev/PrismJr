@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 import calendar
 from csv import DictReader, DictWriter
-import datetime
+from datetime import datetime
 from os import environ
 
 from facepy import GraphAPI
 
 # get posts until that date
-CUTOFF = datetime.datetime(2013, 6, 21)
+CUTOFF = datetime(2012, 6, 21)
 CUTOFF_UNIX = calendar.timegm(CUTOFF.timetuple())
 
 # get secrets
@@ -53,7 +53,7 @@ def text_cond(possible):
 for face in faces['Minority_Face']:
 	print '%s, %s' % (face, face_count)
 	face_count += 1
-	search = '/posts'
+	search = '/posts?since=%s' % CUTOFF_UNIX
 	statuses = graph.get(face + search)
 	if len(statuses['data']) > 1:
 		for status in statuses['data']:
