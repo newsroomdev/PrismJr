@@ -3,8 +3,11 @@ import calendar
 from csv import DictReader, DictWriter
 from datetime import datetime
 from os import environ
+from sys import argv
 
 from facepy import GraphAPI
+
+# (command, argument, input, output) = argv[1:]
 
 # get posts until that date
 CUTOFF = datetime(2012, 6, 21)

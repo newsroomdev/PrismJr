@@ -11,10 +11,12 @@ import requests
 from requests_oauthlib import OAuth1
 from urlparse import parse_qs
 
+# (command, argument, input, output) = argv[1:]
+
 # Mongo setup
-client = MongoClient()
-db = client.apps
-prismJr = db.panopticon
+# client = MongoClient()
+# db = client.apps
+# prismJr = db.prismjr
 
 # Twitter specific auth urls
 REQUEST_TOKEN_URL = "https://api.twitter.com/oauth/request_token"
