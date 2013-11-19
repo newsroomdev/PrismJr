@@ -10,7 +10,7 @@ from facepy import GraphAPI
 # (command, argument, input, output) = argv[1:]
 
 # get posts until that date
-CUTOFF = datetime(2012, 6, 21)
+CUTOFF = datetime(2013, 10, 1)
 CUTOFF_UNIX = calendar.timegm(CUTOFF.timetuple())
 
 # get secrets
@@ -53,7 +53,7 @@ def text_cond(possible):
 	except KeyError:
 		data[place][possible] = ""
 
-for face in faces['Minority_Face']:
+for face in faces['Majority_Face']:
 	print '%s, %s' % (face, face_count)
 	face_count += 1
 	search = '/posts?since=%s' % CUTOFF_UNIX

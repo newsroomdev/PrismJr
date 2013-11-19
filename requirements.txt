@@ -12,6 +12,5 @@ python-dateutil==2.1
 requests==2.0.0
 requests-oauthlib==0.3.3
 six==1.4.1
-tweepy==2.1
 wsgiref==0.1.2
 xlrd==0.9.2
