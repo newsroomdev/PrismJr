@@ -28,7 +28,7 @@ OAUTH_TOKEN_SECRET = "JqQBjr26dIWH4ZTKN6t32tfHOAo57utsYbiKx05rs"
 # API urls & params 
 BASE_URL = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name="
 COUNT = "&count=200"
-CUTOFF = datetime(2013, 10, 1)
+CUTOFF = datetime(2013, 9, 30)
 WAIT = 60 * 15
 
 # get variables from the command line
@@ -50,7 +50,7 @@ def setup_oauth():
 
     verifier = raw_input('Please input the verifier: ')
     oauth = OAuth1(CONSUMER_KEY,
-        client_secret=CONSUMER_SECRET,
+       client_secret=CONSUMER_SECRET,
        resource_owner_key=resource_owner_key,
        resource_owner_secret=resource_owner_secret,
        verifier=verifier)
@@ -134,7 +134,6 @@ def make_requests(users, oauth):
     storage = []
     for user in users:
         print user
-        sleep(0.25)
         r = requests.get(url=BASE_URL+user+COUNT, auth=oauth)
         statuses = r.json()
         next = next_timeline(statuses, user, oauth)
@@ -142,6 +141,7 @@ def make_requests(users, oauth):
         while len(next) > 0:
             statuses.extend(next)
             print 'added %s' % len(next)
+            sleep(5)
             next = next_timeline(statuses, user, oauth)
         storage.append(statuses)
         print 'appended %s total to storage' % len(statuses)
