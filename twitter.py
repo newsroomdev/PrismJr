@@ -29,7 +29,6 @@ OAUTH_TOKEN_SECRET = "JqQBjr26dIWH4ZTKN6t32tfHOAo57utsYbiKx05rs"
 BASE_URL = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name="
 COUNT = "&count=200"
 CUTOFF = datetime(2013, 9, 30)
-WAIT = 60 * 15
 
 # get variables from the command line
 # (argument, input, output) = argv[1:]
@@ -141,7 +140,7 @@ def make_requests(users, oauth):
         while len(next) > 0:
             statuses.extend(next)
             print 'added %s' % len(next)
-            sleep(5)
+            sleep(10)
             next = next_timeline(statuses, user, oauth)
         storage.append(statuses)
         print 'appended %s total to storage' % len(statuses)
