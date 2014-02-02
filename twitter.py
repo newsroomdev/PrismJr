@@ -72,7 +72,7 @@ def get_oauth():
 
 def input_users(filename):
     """Reads a CSV and returns a list of majority and minority users"""
-    with open(filename, 'rb') as readf:
+    with open(filename, 'rU') as readf:
         # create a list of dicts of Twitter URLs nested objects
         data = list(DictReader(readf))
 
