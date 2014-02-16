@@ -28,7 +28,7 @@ OAUTH_TOKEN_SECRET = "JqQBjr26dIWH4ZTKN6t32tfHOAo57utsYbiKx05rs"
 # API urls & params 
 BASE_URL = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name="
 COUNT = "&count=200"
-CUTOFF = datetime(2013, 9, 30)
+CUTOFF = datetime(2013, 6, 21)
 
 # get variables from the command line
 # (argument, input, output) = argv[1:]
@@ -72,21 +72,18 @@ def get_oauth():
 
 def input_users(filename):
     """Reads a CSV and returns a list of majority and minority users"""
-    with open(filename, 'rb') as readf:
+    with open(filename, 'rU') as readf:
         # create a list of dicts of Twitter URLs nested objects
         data = list(DictReader(readf))
 
     # create a list of majority Twitter accounts strings
     tweeps = {}
-    maj_tweeps = [obj['Majority_Twit'] for obj in data if obj['Majority_Twit']]
-    min_tweeps = [obj['Minority_Twit'] for obj in data if obj['Minority_Twit']]
+    missing = [obj['handle'] for obj in data if obj['handle']]
 
     #create dict of arrays of Twitter screen names
     tweeps.update({
-        'Majority_Twit': maj_tweeps, 
-        'Minority_Twit': min_tweeps
+        'missing': missing
     })
-
     return tweeps
 
 def parse_tweets(lists):
@@ -154,7 +151,7 @@ def output_csv(timeline, user=None):
     if user != None:
         write_name = user + '.csv'
     else:
-        write_name = 'twitter.csv'
+        write_name = 'missing_tweeps.csv'
     with open(write_name, 'wb') as writef:
         # Write the header row because of reasons.
         write_csv = DictWriter(writef, fieldnames=row0)
@@ -174,7 +171,7 @@ if __name__ == "__main__":
         print
     else:
         oauth = get_oauth()
-        tweeps = input_users('tweeps.csv')
-        storage = make_requests(tweeps['Majority_Twit'], oauth)
+        tweeps = input_users('missing.csv')
+        storage = make_requests(tweeps['missing'], oauth)
         timeline = parse_tweets(storage)
         output_csv(timeline)
