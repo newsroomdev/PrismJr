@@ -21,9 +21,9 @@ ACCESS_TOKEN_URL = "https://api.twitter.com/oauth/access_token"
 CONSUMER_KEY = environ.get('TW_CONSUMER_KEY')
 CONSUMER_SECRET = environ.get('TW_CONSUMER_SECRET')
 
-# written at run
-OAUTH_TOKEN = "25794883-78jknKRY1EzLhRGFCMdY9tYg3NAcbUO1JrvmNOK7c"
-OAUTH_TOKEN_SECRET = "JqQBjr26dIWH4ZTKN6t32tfHOAo57utsYbiKx05rs"
+# written at runtime
+OAUTH_TOKEN = ""
+OAUTH_TOKEN_SECRET = ""
 
 # API urls & params 
 BASE_URL = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name="
